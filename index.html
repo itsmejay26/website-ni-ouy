@@ -1,139 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fake Robux Generator</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #00aaff, #00ff55);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robux Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .container {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    width: 320px;
-  }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-  h1 {
-    color: #008844;
-  }
+        body::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
 
-  input {
-    width: 90%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
+        .generator-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+        }
 
-  button {
-    background-color: #00aa44;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-  }
+        .logo {
+            font-size: 3rem;
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
 
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+        h1 {
+            color: white;
+            margin-bottom: 1.8rem;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
 
-  .loading {
-    display: none;
-    font-size: 18px;
-    color: #007700;
-    margin-top: 20px;
-  }
+        .input-group {
+            margin-bottom: 1.8rem;
+            text-align: left;
+        }
 
-  .result-page {
-    display: none;
-    text-align: center;
-  }
+        label {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+        }
 
-  .dots::after {
-    content: '...';
-    animation: dots 1s steps(5, end) infinite;
-  }
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
-  @keyframes dots {
-    0%, 20% { content: ''; }
-    40% { content: '.'; }
-    60% { content: '..'; }
-    80%, 100% { content: '...'; }
-  }
-</style>
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(0, 212, 255, 0.5);
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #00c9ff, #00d4ff);
+            color: white;
+            border: none;
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            opacity: 0.5;
+            pointer-events: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 201, 255, 0.3);
+        }
+
+        .generate-btn::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .generate-btn:hover:not(:disabled)::after {
+            left: 150%;
+        }
+
+        .generate-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 201, 255, 0.5);
+        }
+
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 2.5rem;
+        }
+
+        .loading-container h2 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .loading-animation {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.1rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .success-container {
+            display: none;
+            text-align: center;
+            padding: 2.5rem;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #00d4ff;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .success-message {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .placeholder-text {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div id="main-page">
-      <h1>Fake Robux Generator</h1>
-      <input type="text" id="username" placeholder="Enter your Roblox username" />
-      <input type="number" id="amount" placeholder="Enter Robux amount" />
-      <br />
-      <button id="generateBtn" disabled>Generate Robux</button>
-      <p class="loading" id="loadingText">Generating<span class="dots"></span></p>
+    <div class="generator-container" id="generatorContainer">
+        <div class="logo">💰</div>
+        <h1>Robux Generator</h1>
+        <form id="robuxForm">
+            <div class="input-group">
+                <label for="username">Roblox Username:</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="input-group">
+                <label for="amount">Amount of Robux:</label>
+                <input type="number" id="amount" placeholder="Enter amount (max: 100,000)" min="1" max="100000" required>
+            </div>
+            <button type="submit" class="generate-btn" id="generateBtn">Generate Robux</button>
+        </form>
     </div>
 
-    <div id="result-page" class="result-page">
-      <h2>Process Complete!</h2>
-      <p>[PLACEHOLDER TEXT HERE - edit this manually later]</p>
+    <div class="loading-container" id="loadingContainer">
+        <h2>Processing your request...</h2>
+        <div class="loading-animation"></div>
+        <p class="loading-text" id="loadingText">Connecting to Roblox servers...</p>
     </div>
-  </div>
 
-<script>
-  const usernameInput = document.getElementById('username');
-  const amountInput = document.getElementById('amount');
-  const generateBtn = document.getElementById('generateBtn');
-  const loadingText = document.getElementById('loadingText');
-  const mainPage = document.getElementById('main-page');
-  const resultPage = document.getElementById('result-page');
+    <div class="success-container" id="successContainer">
+        <div class="success-icon">✅</div>
+        <h2 class="success-message">Generation Complete!</h2>
+        <p class="placeholder-text">
+            <!-- YOUR CUSTOM MESSAGE HERE -->
+            [PLACEHOLDER TEXT - Edit this section with your own message]
+        </p>
+    </div>
 
-  function checkInputs() {
-    generateBtn.disabled = !(usernameInput.value && amountInput.value);
-  }
+    <script>
+        const usernameInput = document.getElementById('username');
+        const amountInput = document.getElementById('amount');
+        const generateBtn = document.getElementById('generateBtn');
+        const robuxForm = document.getElementById('robuxForm');
+        const generatorContainer = document.getElementById('generatorContainer');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const successContainer = document.getElementById('successContainer');
+        const loadingText = document.getElementById('loadingText');
 
-  usernameInput.addEventListener('input', checkInputs);
-  amountInput.addEventListener('input', checkInputs);
+        // Simulate user typing state check
+        usernameInput.addEventListener('input', validateInputs);
+        amountInput.addEventListener('input', validateInputs);
 
-  generateBtn.addEventListener('click', () => {
-    loadingText.style.display = 'block';
-    generateBtn.disabled = true;
-    usernameInput.disabled = true;
-    amountInput.disabled = true;
+        function validateInputs() {
+            if (usernameInput.value.trim() !== '' && amountInput.value.trim() !== '' && parseInt(amountInput.value) > 0) {
+                generateBtn.classList.add('active');
+            } else {
+                generateBtn.classList.remove('active');
+            }
+        }
 
-    const loadingMessages = [
-      'Connecting to Roblox servers...',
-      'Verifying username...',
-      'Applying Robux...',
-      'Finalizing transaction...'
-    ];
+        // Prevent form submission on 'Enter' key press and require button click
+        robuxForm.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                return false;
+            }
+        });
 
-    let messageIndex = 0;
-    const messageInterval = setInterval(() => {
-      loadingText.textContent = loadingMessages[messageIndex] || 'Finishing up...';
-      messageIndex++;
-    }, 3000);
+        robuxForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-    setTimeout(() => {
-      clearInterval(messageInterval);
-      mainPage.style.display = 'none';
-      resultPage.style.display = 'block';
-    }, 15000);
-  });
-</script>
+            if (!usernameInput.value.trim() || !amountInput.value.trim()) {
+                return;
+            }
+
+            // Show loading screen
+            generatorContainer.style.display = 'none';
+            loadingContainer.style.display = 'block';
+
+            // Simulate loading progress messages
+            const loadingMessages = [
+                "Connecting to Roblox servers...",
+                "Authenticating user account...",
+                "Accessing Robux database...",
+                "Generating Robux for " + usernameInput.value + "...",
+                "Verifying transaction...",
+                "Applying Robux to account...",
+                "Finalizing process..."
+            ];
+
+            let messageIndex = 0;
+            const messageInterval = setInterval(() => {
+                if (messageIndex < loadingMessages.length) {
+                    loadingText.textContent = loadingMessages[messageIndex];
+                    messageIndex++;
+                } else {
+                    clearInterval(messageInterval);
+                }
+            }, 2000);
+
+            // Simulate 15-second processing time
+            setTimeout(() => {
+                loadingContainer.style.display = 'none';
+                successContainer.style.display = 'block';
+            }, 15000);
+        });
+    </script>
 </body>
 </html>
